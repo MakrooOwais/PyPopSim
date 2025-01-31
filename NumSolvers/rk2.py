@@ -11,6 +11,9 @@ from .method import Method
 
 
 class RK2(Method):
+    """
+    Runge-Kutta 2nd order method (RK2) for solving ODEs.
+    """
     def __init__(
         self,
         f: Callable,

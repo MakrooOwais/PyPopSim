@@ -7,6 +7,9 @@ from typing import Union, Callable, List
 
 
 class Method:
+    """
+    Base class for ODE solving methods.
+    """
     def __init__(
         self,
         f: Callable,

@@ -12,6 +12,9 @@ from .method import Method
 
 
 class FwdEuler(Method):
+    """
+    Forward Euler method for solving ODEs.
+    """
     def __init__(
         self,
         f: Callable,

@@ -11,6 +11,9 @@ from .method import Method
 
 
 class ModEuler(Method):
+    """
+    Modified Euler method for solving ODEs.
+    """
     def __init__(
         self,
         f: Callable,

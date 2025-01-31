@@ -11,6 +11,9 @@ from .method import Method
 
 
 class RK4(Method):
+    """
+    Runge-Kutta 4th order method (RK4) for solving ODEs.
+    """
     def __init__(
         self,
         f: Callable,

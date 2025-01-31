@@ -56,31 +56,84 @@ t, solution = model.solve()
     -   Infectious Disease Models
 
 -   **Easy Model Creation**
+
     -   Inherit from base PopModel class
     -   Define your differential equations
     -   Ready to solve!
 
-## Creating Your Own Model
+    ## Creating Your Own Model
 
-PyPopSim makes it easy to implement custom population models:
+    PyPopSim makes it easy to implement custom population models:
+
+    ```python
+    from pypopsim.PopModels import PopModel
+    import numpy as np
+
+    class CustomModel(PopModel):
+        def __init__(self, N0, param1, param2, method, tmin, tmax, h, eps=1e-10):
+            super().__init__(method, N0, tmin, tmax, h, eps)
+            self.param1 = param1
+            self.param2 = param2
+
+        def diff(self, x, t):
+            # Define your differential equations
+            return np.array([
+                # Your equations here
+            ])
+    ```
+
+    ## Creating Your Own Method
+
+    To create your own numerical method, inherit from the `NumericalMethod` base class and implement the `step` function:
+
+    ```python
+    from pypopsim.NumericalMethods import NumericalMethod
+    import numpy as np
+
+    class FwdEuler(NumericalMethod):
+        def __init__(
+            self,
+            f: Callable,
+            f0: Union[int, float, np.ndarray, List[Union[int, float]]],
+            tmin: float,
+            tmax: float,
+            h: float = 1e-2,
+        ):
+            super().__init__(f, f0, tmin, tmax, h)
+
+
+        def solve(self):
+            f = self.f
+            h = self.h
+
+            for i in tqdm(self.range[1:]):
+                self.res.append(self.res[-1] + h * f(self.res[-1], i - h))
+
+            return self.res
+    ```
+
+Then, you can use your custom method in your models:
 
 ```python
-from pypopsim.PopModels import PopModel
+from pypopsim.PopModels import PreyPred
 import numpy as np
 
-class CustomModel(PopModel):
-    def __init__(self, N0, param1, param2, method, tmin, tmax, h, eps=1e-10):
-        super().__init__(method, N0, tmin, tmax, h, eps)
-        self.param1 = param1
-        self.param2 = param2
+# Initialize a predator-prey model with the custom method
+model = PreyPred(
+    X0=np.array([100, 20]),
+    alpha=0.1,
+    beta=0.02,
+    delta=0.02,
+    gamma=0.4,
+    method=CustomMethod(),
+    tmin=0,
+    tmax=100,
+    h=0.1
+)
 
-    def diff(self, x, t):
-        # Define your differential equations
-        return np.array([
-            # Your equations here
-        ])
+# Solve the system
+t, solution = model.solve()
 ```
-
 
 ### Base Class: PopModel
 
