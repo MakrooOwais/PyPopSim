@@ -10,7 +10,7 @@ A Python library for simulating population dynamics using various numerical meth
 Install PyPopSim using pip:
 
 ```bash
-pip install pypopsim
+pip install pypopsim <THIS IS A WORK-IN-PROGRESS>
 ```
 
 ## Quick Start
@@ -38,25 +38,27 @@ t, solution = model.solve()
 
 ## Features
 
-- **Multiple Numerical Methods**
-  - Forward Euler
-  - Modified Euler
-  - RK2 (2nd order Runge-Kutta)
-  - RK4 (4th order Runge-Kutta)
+-   **Multiple Numerical Methods**
 
-- **Pre-implemented Population Models**
-  - Continuous Growth
-  - Logistic Growth
-  - SIR (Susceptible-Infected-Recovered)
-  - SIS (Susceptible-Infected-Susceptible)
-  - Prey-Predator (Lotka-Volterra)
-  - Delayed Population Growth
-  - Infectious Disease Models
+    -   Forward Euler
+    -   Modified Euler
+    -   RK2 (2nd order Runge-Kutta)
+    -   RK4 (4th order Runge-Kutta)
 
-- **Easy Model Creation**
-  - Inherit from base PopModel class
-  - Define your differential equations
-  - Ready to solve!
+-   **Pre-implemented Population Models**
+
+    -   Continuous Growth
+    -   Logistic Growth
+    -   SIR (Susceptible-Infected-Recovered)
+    -   SIS (Susceptible-Infected-Susceptible)
+    -   Prey-Predator (Lotka-Volterra)
+    -   Delayed Population Growth
+    -   Infectious Disease Models
+
+-   **Easy Model Creation**
+    -   Inherit from base PopModel class
+    -   Define your differential equations
+    -   Ready to solve!
 
 ## Creating Your Own Model
 
@@ -79,9 +81,6 @@ class CustomModel(PopModel):
         ])
 ```
 
-## Documentation
-
-For detailed documentation, visit our [Read the Docs](https://pypopsim.readthedocs.io/) page.
 
 ### Base Class: PopModel
 
@@ -101,11 +100,11 @@ class PopModel:
     def diff(self, x, t):
         """
         Define your differential equations here.
-        
+
         Args:
             x: Current state vector
             t: Current time
-            
+
         Returns:
             numpy.ndarray: Rate of change for each variable
         """
@@ -114,20 +113,25 @@ class PopModel:
     def solve(self):
         """
         Solve the system of equations.
-        
+
         Returns:
             tuple: (time_points, solution)
         """
         ...
 ```
 
+## Visualization
+
+PyPopSim includes a `PopulationPlotter` class for easy visualization of population dynamics:
+
+```python
 from pypopsim import PopulationPlotter
 
 class PopulationPlotter:
     def __init__(self, xval: Iterable, data: Iterable, labels: List[str] = []):
         """
         Initialize the population plotter.
-        
+
         Args:
             xval: Iterable of x-axis values (usually time points)
             data: Iterable of y-axis values (population data)
@@ -146,13 +150,68 @@ class PopulationPlotter:
     ):
         """
         Create and display the population plot.
-        
+
         Args:
             title: Plot title (default: "Population Trends")
             xlabel: X-axis label (default: "Time")
             ylabel: Y-axis label (default: "Population")
             save_path: Optional path to save the plot (str or Path object)
         """
+```
+
+### Example Usage
+
+```python
+from pypopsim import PopulationPlotter
+from pypopsim.PopModels import PreyPred
+import numpy as np
+
+# Create and solve a predator-prey model
+model = PreyPred(
+    X0=np.array([100, 20]),
+    alpha=0.1, beta=0.02,
+    delta=0.02, gamma=0.4,
+    method="RK4",
+    tmin=0, tmax=100, h=0.1
+)
+
+t, solution = model.solve()
+
+# Create a population plot
+plotter = PopulationPlotter(
+    xval=t,
+    data=solution,
+    labels=['Prey', 'Predator']
+)
+
+# Display and save the plot
+plotter.plot(
+    title="Predator-Prey Dynamics",
+    xlabel="Time (days)",
+    ylabel="Population Size",
+    save_path="predator_prey_plot.png"
+)
+```
+
+### Multiple Population Visualization
+
+```python
+# Compare different initial conditions
+model1 = PreyPred(X0=np.array([100, 20]), ...)
+model2 = PreyPred(X0=np.array([150, 30]), ...)
+
+t1, sol1 = model1.solve()
+t2, sol2 = model2.solve()
+
+# Plot prey populations
+plotter = PopulationPlotter(
+    xval=[t1, t2],
+    data=[sol1[:, 0], sol2[:, 0]],
+    labels=['Initial:100', 'Initial:150']
+)
+
+plotter.plot(title="Prey Population Comparison")
+```
 
 ## Examples
 
@@ -184,18 +243,19 @@ plt.show()
 
 ## Dependencies
 
-- NumPy >= 1.19.0
-- Matplotlib >= 3.3.0
+-   NumPy >= 1.19.0
+-   Matplotlib >= 3.3.0
+-   Seaborn >= 0.11.0
 
 ## Development
 
 To contribute to PyPopSim:
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/MakrooOwais/PyPopSim.git
 ```
-
 
 ## Contributing
 
