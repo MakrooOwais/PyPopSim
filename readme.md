@@ -298,7 +298,6 @@ plt.show()
 
 -   NumPy >= 1.19.0
 -   Matplotlib >= 3.3.0
--   Seaborn >= 0.11.0
 
 ## Development
 
