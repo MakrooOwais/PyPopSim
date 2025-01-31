@@ -87,7 +87,7 @@ t, solution = model.solve()
     To create your own numerical method, inherit from the `NumericalMethod` base class and implement the `step` function:
 
     ```python
-    from pypopsim.NumericalMethods import NumericalMethod
+    from pypopsim.NumSolvers import NumericalMethod
     import numpy as np
 
     class FwdEuler(NumericalMethod):
